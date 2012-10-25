@@ -111,6 +111,7 @@ void my_heapsort(int s[], int n)
 }
 
 
+#ifdef TEST
 int
 main(int argn, char *argv[])
 {
@@ -130,3 +131,4 @@ main(int argn, char *argv[])
     return 0;
 
 }
+#endif

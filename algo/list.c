@@ -102,6 +102,7 @@ void empty_list(llist_t **l)
     *l = NULL;
 }
 
+#ifdef TEST
 int
 main(int argn, char *argv[])
 {
@@ -123,3 +124,4 @@ main(int argn, char *argv[])
     }
     return 0;
 }
+#endif

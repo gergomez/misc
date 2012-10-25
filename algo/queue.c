@@ -83,6 +83,7 @@ void my_mergesort(int s[], int l, int h)
     }
 }
 
+#ifdef TEST
 int
 main(int argn, char *argv[])
 {
@@ -103,3 +104,4 @@ main(int argn, char *argv[])
 
     return 0;
 }
+#endif
