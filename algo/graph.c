@@ -1,27 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "queue.h"
-
-#define MAXV 1000
-#define FALSE 0
-#define TRUE  1
-
-typedef struct edgenode {
-    int y;
-    int weight;
-    struct edgenode *next;
-} edgenode_t;
-
-typedef struct graph {
-    edgenode_t *edges[MAXV];
-    int degree[MAXV];
-    int nvertices;
-    int nedges;
-    char directed;
-} graph_t;
+#include "graph.h"
 
 void
-initialize_graph(graph_t *g, char directed)
+initialize_graph(graph_t *g, bool directed)
 {
     int i;
 
@@ -34,7 +17,7 @@ initialize_graph(graph_t *g, char directed)
 }
 
 void
-insert_edge(graph_t *g, int x, int y, char directed)
+insert_edge(graph_t *g, int x, int y, bool directed)
 {
     edgenode_t *p;
 
@@ -54,7 +37,7 @@ insert_edge(graph_t *g, int x, int y, char directed)
 }
 
 void
-read_graph(graph_t *g, char directed)
+read_graph(graph_t *g, bool directed)
 {
     int i, m;
     int x, y;
@@ -84,41 +67,26 @@ print_graph(graph_t *g)
     }
 }
 
-/*
- *  BFS
- */
-
-char processed[MAXV];
-char discovered[MAXV];
+bool processed[MAXV];
+bool discovered[MAXV];
 int  parent[MAXV];
+int  entry_time[MAXV];
+int  exit_time[MAXV];
 
 void
 initialize_search(graph_t *g)
 {
     int i;
 
-    for(i = 0; g->nvertices; ++i) {
+    for(i = 0; i < g->nvertices; ++i) {
         processed[i] = discovered[i] = FALSE;
-        parent[i] = -1;
+        exit_time[i] = entry_time[i] = parent[i] = -1;
     }
 }
 
-void
-process_vertex_late(int v)
-{
-}
-
-void
-process_vertex_early(int v)
-{
-    printf("Processed vertex %d\n", v);
-}
-
-void
-process_edge(int x, int y)
-{
-    printf("Processed edge (%d, %d)\n", x, y);
-}
+/*
+ *  BFS
+ */
 
 void
 bfs(graph_t *g, int start)
@@ -163,7 +131,69 @@ find_path(int start, int end)
     }
 }
 
+bool finished;
+int  time;
+
+edgeclass_t
+edge_classification(int x, int y)
+{
+    if(parent[y] == x) return TREE;
+    if(discovered[y] && !processed[y]) return BACK;
+    if(processed[y] && (entry_time[y] > entry_time[x])) return FORWARD;
+    if(processed[y] && (entry_time[y] < entry_time[x])) return FORWARD;
+
+    printf("Warning: unclassified edge (%d, %d)\n", x, y);
+    return UNCLASSIFIED;
+}
+
+void
+dfs(graph_t *g, int v)
+{
+    edgenode_t *p;
+    int y;
+
+    if(finished) return;
+
+    discovered[v] = TRUE;
+    entry_time[v] = ++time;
+
+    process_vertex_early(v);
+
+    for(p = g->edges[v]; p != NULL; p = p->next) {
+        y = p->y;
+        if(discovered[y] == FALSE) {
+            parent[y] = v;
+            process_edge(v, y);
+            dfs(g, y);
+        } else if((!processed[y]) || (g->directed)) {
+            process_edge(v, y);
+        }
+        if(finished) return;
+    }
+
+    process_vertex_late(v);
+    exit_time[v] = ++time;
+    processed[v] = TRUE;
+}
+
 #ifdef TEST
+void
+process_vertex_late(int v)
+{
+}
+
+void
+process_vertex_early(int v)
+{
+    printf("Processed vertex %d\n", v);
+}
+
+void
+process_edge(int x, int y)
+{
+    printf("Processed edge (%d, %d)\n", x, y);
+}
+
 int
 main(int argn, char *argv[])
 {
@@ -171,6 +201,7 @@ main(int argn, char *argv[])
 
     read_graph(&g, FALSE);
     print_graph(&g);
+    initialize_search(&g);
     bfs(&g, 0);
     find_path(0, 4); putchar('\n');
     find_path(0, 2); putchar('\n');
