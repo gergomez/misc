@@ -1,12 +1,7 @@
 #include<limits.h>
 #include<stdlib.h>
 #include<stdio.h>
-
-
-typedef struct llist {
-    int item;
-    struct llist *next;
-} llist_t;
+#include"list.h"
 
 llist_t *search_list(llist_t *l, int x)
 {

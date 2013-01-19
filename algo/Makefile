@@ -1,5 +1,5 @@
 CFLAGS=-g -gstabs
-TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths
+TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths sudoku
 CC=gcc
 
 all: $(TARGETS)
@@ -21,6 +21,8 @@ findperms: backtrack.c
 	$(CC) $(CFLAGS) -DPERMS -o $@ backtrack.c
 findpaths: backtrack.c graph.o queue.o
 	$(CC) $(CFLAGS) -DPATHS -o $@ backtrack.c graph.o queue.o
+sudoku: backtrack.c list.o
+	$(CC) $(CFLAGS) -DSUDOKU -o $@ backtrack.c
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 

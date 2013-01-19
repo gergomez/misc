@@ -1,8 +1,6 @@
-#define MAXV  1000
-#define FALSE 0
-#define TRUE  1
+#include "bool.h"
 
-typedef char bool;
+#define MAXV  1000
 typedef enum { UNCLASSIFIED = -1, TREE = 0, BACK, FORWARD, CROSS} edgeclass_t;
 
 typedef struct edgenode {
