@@ -21,7 +21,7 @@ findperms: backtrack.c
 	$(CC) $(CFLAGS) -DPERMS -o $@ backtrack.c
 findpaths: backtrack.c graph.o queue.o
 	$(CC) $(CFLAGS) -DPATHS -o $@ backtrack.c graph.o queue.o
-sudoku: backtrack.c list.o
+sudoku: backtrack.c
 	$(CC) $(CFLAGS) -DSUDOKU -o $@ backtrack.c
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
