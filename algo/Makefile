@@ -1,5 +1,5 @@
 CFLAGS=-g -gstabs
-TARGETS=graph twocolor findcycle findarticulate
+TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths
 CC=gcc
 
 all: $(TARGETS)
@@ -15,6 +15,12 @@ findcycle: findcycle.c graph.o queue.o
 
 findarticulate: findarticulate.c graph.o queue.o
 	$(CC) $(CFLAGS) -DTEST -o $@ findarticulate.c graph.o queue.o
+findsubsets: backtrack.c
+	$(CC) $(CFLAGS) -DSUBSETS -o $@ backtrack.c
+findperms: backtrack.c
+	$(CC) $(CFLAGS) -DPERMS -o $@ backtrack.c
+findpaths: backtrack.c graph.o queue.o
+	$(CC) $(CFLAGS) -DPATHS -o $@ backtrack.c graph.o queue.o
 %.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
