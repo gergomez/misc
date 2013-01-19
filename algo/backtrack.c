@@ -168,8 +168,6 @@ void process_vertex_late(int v) {}
 void process_vertex_early(int v) {}
 void process_edge(int x, int y) {}
 #elif SUDOKU
-#include "queue.h"
-
 #define DIMENSION 9
 #define NCELLS DIMENSION*DIMENSION
 
@@ -180,7 +178,6 @@ typedef struct {
 typedef struct {
     int m[DIMENSION+1][DIMENSION+1];
     int freecount;
-    int f[NCELLS+1];
     point_t move[NCELLS+1];
 } board_t, *data;
 
