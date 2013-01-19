@@ -310,7 +310,7 @@ main(int argn, char *argv[])
         }
 
     backtrack(a, 0, &board);
-    printf("Numm calls: %zd\n", num_calls);
+    printf("Num calls: %zd\n", num_calls);
 }
 
 void
