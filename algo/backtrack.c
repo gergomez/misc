@@ -171,6 +171,8 @@ void process_edge(int x, int y) {}
 #define DIMENSION 9
 #define NCELLS DIMENSION*DIMENSION
 
+bool verbose = FALSE;
+
 typedef struct {
     int x,y;
 } point_t;
@@ -286,6 +288,12 @@ construct_candidates(int a[], int k, data board, int c[], int *ncandidates)
 void
 process_solution(int a[], int k, data board)
 {
+    int i;
+    if(verbose) {
+        for(i = 1; i <= k; ++i) {
+            printf("(%d, %d) %d\n", board->move[i].x, board->move[i].y, a[i]);
+        }
+    }
     print_board(board);
     finished = TRUE;
 }
@@ -296,6 +304,8 @@ main(int argn, char *argv[])
     int a[NMAX];
     int i, j, v;
     board_t board;
+
+    if(argn > 1) verbose = TRUE;
 
     for(i = 1; i < DIMENSION + 1; ++i)
         for(j = 1; j < DIMENSION + 1; ++j)
@@ -310,7 +320,8 @@ main(int argn, char *argv[])
         }
 
     backtrack(a, 0, &board);
-    printf("Num calls: %zd\n", num_calls);
+    if(verbose)
+        printf("Num calls: %zd\n", num_calls);
 }
 
 void
