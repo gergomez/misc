@@ -1,4 +1,5 @@
-CFLAGS=-g -gstabs
+#CFLAGS=-g -gstabs
+CFLAGS=-O3
 TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths sudoku
 CC=gcc
 
