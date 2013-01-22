@@ -36,6 +36,8 @@ void bfs(graph_t *g, int start);
 extern bool finished;
 extern int  time;
 void dfs(graph_t *g, int v);
+void prim(graph_t *g, int s);
+void dijkstra(graph_t *g, int s);
 
 void process_vertex_late(int v);
 void process_vertex_early(int v);
