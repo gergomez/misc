@@ -91,6 +91,8 @@ transition(tsp_data_t *t, tsp_solution_t *s, int i1, int i2)
 
     int pi1,ni1,pi2,ni2,vi1,vi2;
 
+    if(i1 == i2) return 0;
+
     pi1 = i1 > 0 ? s->s[i1 - 1] : s->s[t->n-1];
     vi1 = s->s[i1];
     ni1 = s->s[(i1 + 1)%t->n];
@@ -138,17 +140,41 @@ random_int(int a, int b)
 }
 
 void
+random_sampling(tsp_data_t *t, tsp_solution_t *s)
+{
+    int i1, i2;
+    int i, j;
+    int value;
+    int delta;
+
+    initialize_solution(t, s);
+    value = solution_cost(t, s);
+
+    for (i = 0; i < COOLING_STEPS; ++i) {
+        for (j = 0; j < STEPS_PER_TEMP; ++j) {
+            i1 = random_int(0, t->n);
+            i2 = random_int(0, t->n);
+            delta = transition(t, s, i1, i2);
+            if (delta < 0) { /* ACCEPT-WIN */
+                value =  value+delta;
+            } else {
+                transition(t, s, i2, i1);
+            }
+        }
+    }
+}
+
+void
 anneal(tsp_data_t *t, tsp_solution_t *s)
 {
     int i1, i2;
     int i, j;
+    int value;
+    int start_value;
     double temp;
-    double value;
-    double start_value;
     double delta;
     double merit, flip;
     double exponent;
-    double random_float();
 
     temp = INITIAL_TEMPERATURE;
     initialize_solution(t, s);
@@ -207,5 +233,6 @@ main(int argn, char *argv[])
 */
 
     anneal(&tsp, &sol);
+    //random_sampling(&tsp, &sol);
     print_solution(&tsp, &sol);
 }
