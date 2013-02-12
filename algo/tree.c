@@ -1,14 +1,6 @@
 #include<stdlib.h>
 #include<stdio.h>
-
-#define MAX(a,b) \
-       ({ __typeof__ (a) _a = (a); \
-               __typeof__ (b) _b = (b); \
-             _a > _b ? _a : _b; })
-typedef struct tree {
-    int item;
-    struct tree *parent, *left, *right;
-} tree_t;
+#include"tree.h"
 
 tree_t *search_tree(tree_t *l, int x)
 {
