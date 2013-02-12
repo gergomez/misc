@@ -11,7 +11,12 @@ if len(hw_addr_byte) != 6:
     print 'Invalid ethernet addr: "' + sys.argv[1] + '"'
     sys.exit(1)
 
-hw_addr = reduce(lambda a, b: (a + chr(int(b,16))), hw_addr_byte, '')
+try:
+    hw_addr = reduce(lambda a, b: (a + chr(int(b,16))), hw_addr_byte, '')
+except ValueError:
+    print 'Invalid ethernet addr: "' + sys.argv[1] + '"'
+    sys.exit(1)
+
 msg = '\xff'*6 + hw_addr*16
 print 'Sending WakeOnLan to ' + sys.argv[1] + '...'
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
