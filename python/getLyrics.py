@@ -30,7 +30,13 @@ def usage():
 def getlyrics1(artist, name):
     urlpath = artist + ':' + name
     urlpath = urlpath.replace(' ', '_')
-    for p in set(['Gracenote:'+urlpath, urlpath, 'Gracenote:'+urlpath.translate(toascii), urlpath.translate(toascii)]):
+    urlpath_ascii = urlpath.translate(toascii)
+    # prefer Gracenote, so no set() to remove duplicates
+    paths = ['Gracenote:'+urlpath, urlpath]
+    if urlpath_ascii != urlpath:
+        paths.extend(['Gracenote:'+urlpath.translate(toascii), urlpath.translate(toascii)])
+
+    for p in paths:
         if verbose: print 'Trying wikia ' + p
         url = 'http://lyrics.wikia.com/' + p
         html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
