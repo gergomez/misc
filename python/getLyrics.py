@@ -23,8 +23,11 @@ def usage():
     Options:
         -h: show help
         -v: verbose
-        -o: overwrite existing tags'''
-
+        -o: overwrite existing tags
+        -p: priorty
+            231: lyricmania.com, letras.mus.br, lyrics.wikia.com
+            3: letras.mus.br
+'''
 
 # lyrics.wikia.com
 def getlyrics1(artist, name):
@@ -39,7 +42,11 @@ def getlyrics1(artist, name):
     for p in paths:
         if verbose: print 'Trying wikia ' + p
         url = 'http://lyrics.wikia.com/' + p
-        html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+        try:
+            html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+        except:
+            if verbose: print 'Unable to connect'
+            return None
         if html.find('<meta name="description" content="Instrumental" />') >= 0:
             return 'Instrumental'
         res = re.search('height=\'17\'/></a></div>\s*(?:<p>)?(.*?)<!--\s*(?:<p>)?NewPP limit report', html,
@@ -59,7 +66,11 @@ def getlyrics2(artist, name):
     for p in set([path, path.translate(toascii)]):
         if verbose: print 'Trying lyricsmania ' + p
         url = 'http://www.lyricsmania.com/' + p + '.html'
-        html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+        try:
+            html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+        except:
+            if verbose: print 'Unable to connect'
+            return None
         res = re.search("<div id='songlyrics_h' class='dn'>(.*?)</div>", html, re.S | re.I | re.U)
         if res:
             txt = res.group(1)
@@ -73,12 +84,20 @@ def getlyrics2(artist, name):
 def getlyrics3(artist, name):
     if verbose: print 'Trying letras.mus.br'
     url = 'http://letras.mus.br/' + artist.replace(' ', '-').lower() + '/'
-    songs = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+    try:
+        songs = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+    except:
+        if verbose: print 'Unable to connect'
+        return None
     res = re.search('<li><a href="([^"]*)">' + name + '</a></li>', songs, re.S | re.I | re.U)
     if not res:
         return None
     url = 'http://letras.mus.br' + res.group(1)
-    html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+    try:
+        html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
+    except:
+        if verbose: print 'Unable to connect'
+        return None
     res = re.search('<div id="div_letra" data-linhas="\d+">\s+(.*?)</div>',
                     html, re.S | re.I | re.U)
     if res:
@@ -90,17 +109,29 @@ def getlyrics3(artist, name):
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'hov', ['help', 'overwrite', 'verbose'])
+    opts, args = getopt.getopt(sys.argv[1:], 'hovp:', ['help', 'overwrite', 'verbose', 'priority='])
 except getopt.GetoptError as err:
     print str(err)
     usage()
     sys.exit(2)
+
+funcs = [getlyrics1,getlyrics2,getlyrics3]
 
 for o, a in opts:
     if o in ('-o', '--overwrite'):
         overwrite = True
     elif o in ('-v', '--verbose'):
         verbose = True
+    elif o in ('-p', '--priority'):
+        tmp = []
+        try:
+            for i in a:
+                tmp.append(funcs[int(i)-1])
+        except:
+            print 'Invalid argument'
+            usage()
+            sys.exit(2)
+        funcs = tmp
     elif o in ('-h', '--help'):
         usage()
         sys.exit()
@@ -112,6 +143,7 @@ n = 0
 
 for song in selection:
     n += 1
+    lyrics = None
     artist = song.artist()
     name = re.sub('\(.*?\)', '', song.name())
     name = ''.join(filter(lambda x: x.isalnum() or x in [',', '.', "'", '&'] or x.isspace(), name))
@@ -121,11 +153,11 @@ for song in selection:
         print ' -- Tag Present. Skipped --'
         continue
     if verbose: print
-    lyrics = getlyrics1(artist, name)
-    if not lyrics:
-        lyrics = getlyrics2(artist, name)
-    if not lyrics:
-        lyrics = getlyrics3(artist, name)
+
+    for f in funcs:
+        lyrics = f(artist, name)
+        if lyrics: break
+
     if lyrics:
         print '-- ' + lyrics[:20] + '...'
         song.lyrics.set(lyrics)
