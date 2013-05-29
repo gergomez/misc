@@ -13,12 +13,16 @@ intab = u'ÀÁÂÃÄÅàáâãäåÒÓÔÕÖØòóôõöøÈÉÊËèéêëÇçÌ
 outtab = u'AAAAAAaaaaaaOOOOOOooooooEEEEeeeeCcIIIIiiiiUUUUuuuuy'
 toascii = dict((ord(a), b) for a, b in zip(intab, outtab))
 
+overwrite = False
+verbose = False
+
 
 def usage():
     print '''usage: getlyrics.py [options]
     Retrieve lyrics for selected itunes song.
     Options:
         -h: show help
+        -v: verbose
         -o: overwrite existing tags'''
 
 
@@ -26,7 +30,8 @@ def usage():
 def getlyrics1(artist, name):
     urlpath = artist + ':' + name
     urlpath = urlpath.replace(' ', '_')
-    for p in ['Gracenote:'+urlpath, urlpath, 'Gracenote:'+urlpath.translate(toascii), urlpath.translate(toascii)]:
+    for p in set(['Gracenote:'+urlpath, urlpath, 'Gracenote:'+urlpath.translate(toascii), urlpath.translate(toascii)]):
+        if verbose: print 'Trying wikia ' + p
         url = 'http://lyrics.wikia.com/' + p
         html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
         if html.find('<meta name="description" content="Instrumental" />') >= 0:
@@ -45,7 +50,8 @@ def getlyrics1(artist, name):
 def getlyrics2(artist, name):
     path = name + '_lyrics_' + artist
     path = path.lower().replace(' ', '_')
-    for p in [path, path.translate(toascii)]:
+    for p in set([path, path.translate(toascii)]):
+        if verbose: print 'Trying lyricsmania ' + p
         url = 'http://www.lyricsmania.com/' + p + '.html'
         html = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
         res = re.search("<div id='songlyrics_h' class='dn'>(.*?)</div>", html, re.S | re.I | re.U)
@@ -59,6 +65,7 @@ def getlyrics2(artist, name):
 
 # letras.mus.br
 def getlyrics3(artist, name):
+    if verbose: print 'Trying letras.mus.br'
     url = 'http://letras.mus.br/' + artist.replace(' ', '-').lower() + '/'
     songs = ''.join(urllib.urlopen(url.encode('utf-8')).readlines())
     res = re.search('<li><a href="([^"]*)">' + name + '</a></li>', songs, re.S | re.I | re.U)
@@ -77,16 +84,17 @@ def getlyrics3(artist, name):
 
 
 try:
-    opts, args = getopt.getopt(sys.argv[1:], 'ho', ['help', 'overwrite'])
+    opts, args = getopt.getopt(sys.argv[1:], 'hov', ['help', 'overwrite', 'verbose'])
 except getopt.GetoptError as err:
     print str(err)
     usage()
     sys.exit(2)
 
-overwrite = 0
 for o, a in opts:
     if o in ('-o', '--overwrite'):
-        overwrite = 1
+        overwrite = True
+    elif o in ('-v', '--verbose'):
+        verbose = True
     elif o in ('-h', '--help'):
         usage()
         sys.exit()
@@ -106,6 +114,7 @@ for song in selection:
     if song.lyrics() != '' and not overwrite:
         print ' -- Tag Present. Skipped --'
         continue
+    if verbose: print
     lyrics = getlyrics1(artist, name)
     if not lyrics:
         lyrics = getlyrics2(artist, name)
