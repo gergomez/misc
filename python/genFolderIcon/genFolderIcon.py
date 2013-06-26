@@ -48,6 +48,10 @@ else:
         iconfile += '.icns'
     iconfile = app + '/Contents/Resources/' + iconfile
 
+if not os.path.isfile(iconfile):
+    print 'error: iconfile not found'
+    usage()
+
 tmpdir = mkdtemp()
 os.system('iconutil -c iconset /System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/GenericFolderIcon.icns -o ' + tmpdir + '/folder.iconset')
 os.system('iconutil -c iconset "' + iconfile + '" -o ' + tmpdir + '/app.iconset')
