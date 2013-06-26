@@ -3,6 +3,8 @@
 # Set a folder icon based on a .app or .icns, convert to grayscale and center
 # over generic folder icon.
 #
+# Needs ImageMagick and iconutil
+#
 # Use included plistlib (first version of new 3.4 version that support
 # binary plist) http://bugs.python.org/issue14455
 #
