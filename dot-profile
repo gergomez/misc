@@ -1,0 +1,87 @@
+# Change the window title of X terminals
+function preexec {
+  [ -n "$COMP_LINE" ] && return  # do nothing if completing
+  [ "$BASH_COMMAND" = "$PROMPT_COMMAND" ] && return # don't cause a preexec for $PROMPT_COMMAND
+  [[ "$BASH_COMMAND" == vi\ * ]] && return # don't check vi
+  SECONDS=0
+}
+trap 'preexec' DEBUG
+
+_MAXEXECTIME=30
+
+seconds2days() { 
+printf "%ddays,%02d:%02d:%02d" $(((($1/60)/60)/24)) \
+    $(((($1/60)/60)%24)) $((($1/60)%60)) $(($1%60)) |
+  sed 's/^1days/1day/;s/^0days,\(00:\)*//;s/^0//'
+}
+
+function exitstatus {
+  EXITSTATUS="$?"
+  if [ $EXITSTATUS -ne 0 -o $SECONDS -gt $_MAXEXECTIME ]; then
+    echo -ne "[ "
+    if [ $EXITSTATUS -ne 0 ]; then
+      echo -ne "\033[1;31m\033[1m$EXITSTATUS "
+    fi
+    if [ $SECONDS -gt $_MAXEXECTIME ]; then
+      echo -ne "\033[1;33m\033[1m$(seconds2days $SECONDS) "
+    fi
+    echo -e "\033[m]"
+  fi
+  history -a ; history -c ; history -r
+  SECONDS=0
+}
+
+if [[ ${EUID} == 0 ]] ; then
+  PS1='\[\033[00;31m\]\h\[\033[00;36m\] \W \[\033[00m\]\$ '
+else
+  PS1='\[\033[00;32m\]\h\[\033[00;36m\] \w \[\033[00m\]\$ '
+fi
+PROMPT_COMMAND=exitstatus
+# enable colors
+alias ls='ls -G'
+alias grep='grep --color=auto'
+alias shuf="perl -MList::Util=shuffle -e 'print shuffle(<>);'"
+
+export LESS=-erX
+export PATH=/usr/local/sbin:$PATH
+shopt -s checkwinsize
+
+# History related
+# remove duplicates while preserving input order
+function history_dedup {
+  tail -r $@ | awk '! x[$0]++' | tail -r
+}
+
+# removes $HISTIGNORE commands from input
+function history_remove_histignore {
+   if [ -n "$HISTIGNORE" ]; then
+      # replace : with |, then * with .*
+      local IGNORE_PAT=`echo "$HISTIGNORE" | sed s/\:/\|/g | sed s/\*/\.\*/g`
+      # negated grep removes matches
+      grep -vx "$IGNORE_PAT" $@
+   else
+      cat $@
+   fi
+}
+
+# clean up the history file by remove duplicates and commands matching
+# $HISTIGNORE entries
+function history_cleanup {
+   local HISTFILE_SRC=~/.bash_history
+   local HISTFILE_DST=/tmp/.$USER.bash_history.clean
+   if [ -f $HISTFILE_SRC ]; then
+      \cp $HISTFILE_SRC $HISTFILE_SRC.backup
+      history_dedup $HISTFILE_SRC | history_remove_histignore >| $HISTFILE_DST
+      \mv $HISTFILE_DST $HISTFILE_SRC
+      chmod go-r $HISTFILE_SRC
+      history -c
+      history -r
+   fi
+}
+
+export HISTCONTROL=ignoreboth:erasedups  # no duplicate entries
+export HISTSIZE=100000                   # big big history
+export HISTFILESIZE=100000               # big big history
+export HISTIGNORE='&:ls:cd ..:exit:history'
+export histchars='!^'                    # avoid # to be a comment
+shopt -s histappend                      # append to history, don't overwrite it

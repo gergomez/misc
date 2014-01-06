@@ -1,10 +1,12 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "bool.h"
 
 #define NMAX 1000
 #define MAXCANDIDATES 1000
 
 bool finished = FALSE;
+void backtrack();
 
 #ifdef SUBSETS
 typedef int  data;
@@ -336,6 +338,7 @@ unmake_move(int a[], int k, data board)
 }
 #endif
 
+void
 backtrack(int a[], int k, data input)
 {
     int c[MAXCANDIDATES];

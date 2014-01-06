@@ -52,6 +52,7 @@ read_tsp_data(tsp_data_t *tsp)
         fprintf(stdout, "Warning: Not enough data\n");
         tsp->n = n;
     }
+    return 0;
 }
 
 void
@@ -128,7 +129,7 @@ transition(tsp_data_t *t, tsp_solution_t *s, int i1, int i2)
 double
 random_float(double a, double b)
 {
-    b = (b-a)*random()/((unsigned int)2<<31L-1);
+    b = (b-a)*random()/((unsigned int)(2L<<31)-1);
     return a + b;
 }
 
