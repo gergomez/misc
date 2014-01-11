@@ -117,7 +117,7 @@ transition(tsp_data_t *t, tsp_solution_t *s, int i1, int i2)
      * twice) */
 
     if( pi1 == vi2 || ni1 == vi2 || pi2 == vi1 || ni2 == vi1) {
-        cost += 2*t->m[vi1][vi2];
+        cost += t->m[vi1][vi2] + t->m[vi2][vi1];
     }
 
     s->cost += cost;
