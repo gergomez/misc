@@ -35,4 +35,3 @@ sudoku: backtrack.c
 
 clean:
 	rm -f *.o $(TARGETS)
-

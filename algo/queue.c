@@ -38,7 +38,7 @@ void enqueue(queue_t *q, int x)
 int dequeue(queue_t *q)
 {
     if(q->p > q->n) {
-        fprintf(stderr,"Warning: dequeue from empty queue\n");
+        fprintf(stderr, "Warning: dequeue from empty queue\n");
         return -1;
     }
     return q->q[q->p++];
@@ -101,7 +101,6 @@ main(int argn, char *argv[])
     for(i = 0; i < n; ++i) {
         printf("%d\n", s[i]);
     }
-
     return 0;
 }
 #endif

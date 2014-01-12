@@ -35,7 +35,7 @@ int partition(int s[], int l, int h)
             swap(&s[i], &s[fh]);
             ++fh;
         }
-    swap(&s[p],&s[fh]);
+    swap(&s[p], &s[fh]);
     return fh;
 }
 

@@ -156,9 +156,9 @@ dijkstra(graph_t *g, int s)
 void
 find_path(int start, int end)
 {
-    if((start == end) || end == -1)
+    if((start == end) || end == -1) {
         printf("%d", start);
-    else {
+    } else {
         find_path(start, parent[end]);
         printf(" %d", end);
     }

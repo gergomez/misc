@@ -109,7 +109,7 @@ main(int argn, char *argv[])
 
     for(j = 0; j < m; ++j) {
         for(i = 0; i < n; ++i) {
-            insert_list(&l, (i+j)); //random());
+            insert_list(&l, (i+j));     // random());
         }
         for(i = 0; i < n; ++i) {
             traverse_list(l); putchar('\n');

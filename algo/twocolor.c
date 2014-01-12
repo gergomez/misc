@@ -47,8 +47,8 @@ process_edge(int x, int y)
     color[y] = complement(color[x]);
 }
 
-void process_vertex_late(int v) {};
-void process_vertex_early(int v) {};
+void process_vertex_late(int v) {}
+void process_vertex_early(int v) {}
 
 #ifdef TEST
 int

@@ -54,7 +54,7 @@ int decqueue(cqueue_t *q)
 {
     int t;
     if(q->nel == 0) {
-        fprintf(stderr,"Warning: decqueue from empty cqueue\n");
+        fprintf(stderr, "Warning: decqueue from empty cqueue\n");
         return -1;
     }
     t = q->q[q->r++];

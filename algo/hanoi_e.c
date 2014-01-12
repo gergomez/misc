@@ -25,11 +25,11 @@ solve(int from, int to, int n)
         return;
     }
 
-    vec |= (1<<from);
-    vec |= (1<<to);
+    vec |= (1 << from);
+    vec |= (1 << to);
     vec = ~vec;
     for(i = 0; i < npegs; ++i) {
-        if((vec & (1<<i))) {
+        if((vec & (1 << i))) {
                 break;
         }
     }
@@ -58,13 +58,13 @@ main(int argn, char *argc[])
         if(n/m < 1) { m = n; }
         for (i = 2; i < m + 1; ++i) {
             solve(0, i, n/m);
-            basevec |= (1<<i);
+            basevec |= (1 << i);
         }
         printf("\n");
         solve(0, npegs - 1, n - (n/m)*(m - 1));
         printf("\n");
         for (i = m; i > 1; --i) {
-            basevec &= ~(1<<i);
+            basevec &= ~(1 << i);
             solve(i, npegs - 1, n/m);
         }
     } else {

@@ -60,7 +60,7 @@ print_solution(tsp_data_t *t, tsp_solution_t *s)
 {
     int i;
 
-    printf("%d:%s(%d)", s->cost, t->names[s->s[0]],t->m[s->s[t->n-1]][s->s[0]]);
+    printf("%d:%s(%d)", s->cost, t->names[s->s[0]], t->m[s->s[t->n-1]][s->s[0]]);
     for(i = 1; i < t->n; ++i) {
         printf(">%s(%d)", t->names[s->s[i]], t->m[s->s[i-1]][s->s[i]]);
     }
@@ -90,7 +90,7 @@ transition(tsp_data_t *t, tsp_solution_t *s, int i1, int i2)
 {
     int cost = 0;
 
-    int pi1,ni1,pi2,ni2,vi1,vi2;
+    int pi1, ni1, pi2, ni2, vi1, vi2;
 
     if(i1 == i2) return 0;
 
@@ -116,7 +116,7 @@ transition(tsp_data_t *t, tsp_solution_t *s, int i1, int i2)
      * we need to add twice the vi1-vi2 distance (as we remove it
      * twice) */
 
-    if( pi1 == vi2 || ni1 == vi2 || pi2 == vi1 || ni2 == vi1) {
+    if(pi1 == vi2 || ni1 == vi2 || pi2 == vi1 || ni2 == vi1) {
         cost += t->m[vi1][vi2] + t->m[vi2][vi1];
     }
 
@@ -198,14 +198,12 @@ anneal(tsp_data_t *t, tsp_solution_t *s)
             exponent = (-1.0*delta/value)/(K*temp);
             merit = pow(M_E, exponent);
 
-            if (delta < 0) { /* ACCEPT-WIN */
-                value =  value+delta;
-            } else {         /* ACCEPT-LOSS */
-                if (merit > flip) {
-                    value = value + delta;
-                } else {        /* REJECT */
-                    transition(t, s, i2, i1);
-                }
+            if (delta < 0) {            /* ACCEPT-WIN */
+                value = value + delta;
+            } else if (merit > flip) {  /* ACCEPT-LOSS */
+                value = value + delta;
+            } else {                    /* REJECT */
+                transition(t, s, i2, i1);
             }
         }
 
@@ -225,15 +223,7 @@ main(int argn, char *argv[])
     srandom(time(NULL));
     read_tsp_data(&tsp);
     initialize_solution(&tsp, &sol);
-/*
-    print_solution(&tsp, &sol);
-    transition(&tsp, &sol, 0, 1);
-    print_solution(&tsp, &sol);
-    transition(&tsp, &sol, 0, 1);
-    print_solution(&tsp, &sol);
-*/
-
     anneal(&tsp, &sol);
-    //random_sampling(&tsp, &sol);
+    // random_sampling(&tsp, &sol);
     print_solution(&tsp, &sol);
 }

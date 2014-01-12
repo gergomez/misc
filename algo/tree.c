@@ -128,7 +128,7 @@ int delete_tree(tree_t **l, int x)
 int
 main(int argn, char *argv[])
 {
-    int i, j, n, m, avg;
+    int i, j, n, m, avg = 0;
     tree_t *t = NULL;
 
     n = atoi(argv[1]);
@@ -141,6 +141,6 @@ main(int argn, char *argv[])
         avg += height_tree(t);
         empty_tree(&t);
     }
-    printf("%f\n", 1.*avg/m); 
+    printf("%f\n", 1.*avg/m);
     return 0;
 }

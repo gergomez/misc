@@ -176,7 +176,7 @@ void process_edge(int x, int y) {}
 bool verbose = FALSE;
 
 typedef struct {
-    int x,y;
+    int x, y;
 } point_t;
 
 typedef struct {
@@ -271,9 +271,9 @@ construct_candidates(int a[], int k, data board, int c[], int *ncandidates)
     int i;
     bool possible[DIMENSION+1];
 
-    possible_values(&x,&y,board,possible);
+    possible_values(&x, &y, board, possible);
 
-    if((x<0) && (y<0)) return; /* No valid moves */
+    if((x < 0) && (y < 0)) return; /* No valid moves */
 
     board->move[k].x = x;
     board->move[k].y = y;
@@ -329,12 +329,12 @@ main(int argn, char *argv[])
 void
 make_move(int a[], int k, data board)
 {
-    fill_square(board->move[k].x,board->move[k].y,a[k],board);
+    fill_square(board->move[k].x, board->move[k].y, a[k], board);
 }
 void
 unmake_move(int a[], int k, data board)
 {
-    free_square(board->move[k].x,board->move[k].y,a[k],board);
+    free_square(board->move[k].x, board->move[k].y, a[k], board);
 }
 #endif
 
@@ -345,16 +345,16 @@ backtrack(int a[], int k, data input)
     int ncandidates;
     int i;
 
-    if (is_a_solution(a,k,input)) {
-        process_solution(a,k,input);
+    if (is_a_solution(a, k, input)) {
+        process_solution(a, k, input);
     } else {
         ++k;
-        construct_candidates(a,k,input,c,&ncandidates);
+        construct_candidates(a, k, input, c, &ncandidates);
         for (i = 0; i < ncandidates; ++i) {
             a[k] = c[i];
-            make_move(a,k,input);
-            backtrack(a,k,input);
-            unmake_move(a,k,input);
+            make_move(a, k, input);
+            backtrack(a, k, input);
+            unmake_move(a, k, input);
             if (finished) return;
         }
     }

@@ -11,11 +11,13 @@ typedef struct pqueue {
 
 int pq_parent(int n)
 {
-    if(n == 1) return(-1);
-    else return((int)n/2);
+    if(n == 1)
+        return(-1);
+    else
+        return((int)n/2);
 }
 
-int pq_young_child(int n) 
+int pq_young_child(int n)
 {
     return (2*n);
 }
@@ -39,9 +41,9 @@ void bubble_up(pqueue_t *q, int p)
 
 void pq_insert(pqueue_t *q, int x)
 {
-    if(q->n >= PQ_SIZE)
-        fprintf(stderr, "Warning: priority queue overflow insert x=%d\n",x);
-    else {
+    if(q->n >= PQ_SIZE) {
+        fprintf(stderr, "Warning: priority queue overflow insert x=%d\n", x);
+    } else {
         q->n = (q->n) + 1;
         q->q[q->n] = x;
         bubble_up(q, q->n);
@@ -81,8 +83,9 @@ void bubble_down(pqueue_t *q, int p)
 int extract_min(pqueue_t *q)
 {
     int min = -1;
-    if(q->n <= 0) fprintf(stderr, "Warning: empty priority queue.\n");
-    else {
+    if(q->n <= 0) {
+      fprintf(stderr, "Warning: empty priority queue.\n");
+    } else {
         min = q->q[1];
         q->q[1] = q->q[q->n];
         --q->n;
@@ -129,6 +132,5 @@ main(int argn, char *argv[])
     for(i = 0; i < n; ++i)
         printf("%d\n", extract_min(&q));
     return 0;
-
 }
 #endif
