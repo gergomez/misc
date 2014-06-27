@@ -48,6 +48,8 @@ foreach (split /\n/, $txt) {
         $tmp = " -c:a:$n copy ";
       } elsif ($type eq 'ac3' and $bitrate >= 400) {
         $tmp = " -c:a:$n libfdk_aac -b:a:$n 320k ";
+      } else {
+        $tmp = " -c:a:$n copy ";
       }
     } elsif ($type eq 'ac3') {
       $tmp = " -c:a:$n libfdk_aac -b:a:$n 128k ";
