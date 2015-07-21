@@ -46,8 +46,8 @@ main(int argn, char *argc[])
 {
     int i, n, m;
     scanf("%d %d", &n, &npegs);
-    if(npegs > MAXPEGS) {
-        printf("ERROR: npegs should not be greater than %d\n", MAXPEGS);
+    if(npegs < 3 || npegs > MAXPEGS) {
+        printf("ERROR: npegs must be greater than 2 and not greater than %d\n", MAXPEGS);
         return 1;
     }
 
