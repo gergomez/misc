@@ -1,6 +1,5 @@
-#CFLAGS=-O2 -g -fomit-frame-pointer -Wall
-CFLAGS=-O2 -Wall
-CC=icc
+CFLAGS=-O2 -g -Wall
+CC=gcc
 LDFLAGS=
 
 all: mastermind mmind-auto
