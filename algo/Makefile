@@ -1,6 +1,5 @@
-#CFLAGS=-g -gstabs
-CFLAGS=-O3
-TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths sudoku wgraph tsp
+CFLAGS=-O2 -g
+TARGETS=graph twocolor findcycle findarticulate findsubsets findperms findpaths sudoku wgraph tsp hanoi
 CC=gcc
 
 all: $(TARGETS)
@@ -13,6 +12,9 @@ wgraph: wgraph.c
 
 tsp: tsp.c
 	$(CC) $(CFLAGS) -DTEST -o $@ tsp.c
+
+hanoi: hanoi.c
+	$(CC) $(CFLAGS) -DTEST -o $@ hanoi.c
 
 twocolor: twocolor.c graph.o queue.o
 	$(CC) $(CFLAGS) -DTEST -o $@ twocolor.c graph.o queue.o
