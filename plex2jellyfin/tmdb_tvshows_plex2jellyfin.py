@@ -7,7 +7,7 @@ import requests
 # Configuration
 # -------------------------------------------------------------------
 PLEX_URL = "http://server:32400"
-PLEX_TOKEN = "your-token"
+PLEX_TOKEN = "plex-token"
 
 JELLYFIN_URL = "http://server:8096"
 JELLYFIN_API_KEY = "YOUR_API_KEY"

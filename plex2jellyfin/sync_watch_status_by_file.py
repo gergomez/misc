@@ -12,7 +12,7 @@ PLEX_TOKEN = "plex-token"
 
 JELLYFIN_URL = "http://server:8096"
 JELLYFIN_API_KEY = "YOUR_API_KEY"
-JELLYFIN_USERNAME = "your-user"
+JELLYFIN_USERNAME = "your_user"
 
 # Path translation dictionary: { "Plex_Path_Prefix": "Jellyfin_Path_Prefix" }
 PATH_MAPPINGS = {
